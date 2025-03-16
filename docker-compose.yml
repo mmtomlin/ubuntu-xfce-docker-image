@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  ubuntu-xfce:
+    image: tastywaffle/ubuntu-xfce:latest
+    restart: always
+    ports:
+      - 5901
+      - 6081
+    environment:
+      - RESOLUTION=1920x1080
+    volumes:
+      - ubuntu-xfce-data:/home/ubuntu
+    networks:
+      - dokploy-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ubuntu-xfce.rule=Host(`remote.tomlitech.co.uk`)"
+      - "traefik.http.routers.ubuntu-xfce.entrypoints=websecure"
+      - "traefik.http.routers.ubuntu-xfce.tls.certResolver=letsencrypt"
+      - "traefik.http.services.ubuntu-xfce.loadbalancer.server.port=6081"
+
+volumes:
+  ubuntu-xfce-data:
+    driver: local
+
+networks:
+  dokploy-network:
+    external: true
