@@ -18,14 +18,17 @@ RUN apt-get install -y autocutsel
 RUN apt-get install -y python3 python3-pip
 # RUN apt-get install firefox -y
 RUN apt-get install -y npm
-RUN apt-get update && apt-get install -y snapd
-RUN snap install code-insiders --classic
+# Install VS Code Insiders using Microsoft's package repository
+RUN wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg && \
+    install -D -o root -g root -m 644 packages.microsoft.gpg /etc/apt/keyrings/packages.microsoft.gpg && \
+    sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list' && \
+    rm -f packages.microsoft.gpg && \
+    apt-get update && \
+    apt-get install -y code-insiders
 RUN apt-get clean
 
-# Setup VNC server
-RUN mkdir -p /root/.vnc && \
-    echo "password" | vncpasswd -f > /root/.vnc/passwd && \
-    chmod 600 /root/.vnc/passwd
+# Setup VNC server directory
+RUN mkdir -p /root/.vnc
 
 COPY xstartup /root/.vnc/xstartup
 RUN chmod +x /root/.vnc/xstartup

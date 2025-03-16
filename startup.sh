@@ -1,5 +1,15 @@
 #!/bin/sh
 
+# Set default VNC password if not provided
+if [ -z "${VNC_PASSWORD}" ]; then
+    echo "WARNING: No VNC_PASSWORD provided, using default password 'vncpassword'"
+    VNC_PASSWORD="vncpassword"
+fi
+
+# Set up VNC password
+echo "${VNC_PASSWORD}" | vncpasswd -f > /root/.vnc/passwd
+chmod 600 /root/.vnc/passwd
+
 export DISPLAY=:1.0
 
 # Start novnc
