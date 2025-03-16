@@ -16,7 +16,10 @@ RUN apt-get update && \
 
 RUN apt-get install -y autocutsel
 RUN apt-get install -y python3 python3-pip
-RUN apt-get install firefox -y
+# RUN apt-get install firefox -y
+RUN apt-get install -y npm
+RUN apt-get update && apt-get install -y snapd
+RUN snap install code-insiders --classic
 RUN apt-get clean
 
 # Setup VNC server
